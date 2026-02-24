@@ -5,7 +5,7 @@ SHELL ["/bin/bash", "-c"]
 ARG USER
 ARG UID
 ARG HOME
-ARG RUST_TOOLCHAIN
+# ARG RUST_TOOLCHAIN
 ARG DEBIAN_FRONTEND=noninteractive
 
 # ------ Setup environment ------
@@ -38,7 +38,7 @@ RUN sudo apt-get install --yes --no-install-recommends \
     zsh
 
 # ------ Install Rust ------
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain $RUST_TOOLCHAIN -y
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain stable -y
 
 # ------ Install Zephyr ------
 # Zephyr SDK Prequisites
@@ -58,8 +58,8 @@ RUN sudo apt-get install --yes --no-install-recommends \
     file \
     make \
     gcc \
-    gcc-multilib \
-    g++-multilib \
+    # gcc-multilib and g++-multilib are not available on all architectures (e.g. ARM64)
+    # and aren't strictly required for our build; omit them to avoid apt errors.
     libsdl2-dev \
     libmagic1
 
